@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <p>{{ message }}</p>
-    <user/>
+    <v-app>
+      <p>{{ message }}</p>
+      <user/>
+    </v-app>
   </div>
 </template>
 

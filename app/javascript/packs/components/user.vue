@@ -18,19 +18,19 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                    <v-text-field v-model="editedItem.first_name" label="First Name"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
+                    <v-text-field v-model="editedItem.last_name" label="Last Name"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
+                    <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
+                    <v-text-field v-model="editedItem.phone" label="Phone"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
+                    <v-text-field v-model="editedItem.address" label="Address"></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -39,7 +39,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+              <v-btn color="blue darken-1" text @click="save(editedItem)">Save</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -56,38 +56,40 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data: () => ({
     dialog: false,
     headers: [
       {
-        text: "Dessert (100g serving)",
+        text: "First Name",
         align: "left",
         sortable: false,
-        value: "name"
+        value: "first_name"
       },
-      { text: "Calories", value: "calories" },
-      { text: "Fat (g)", value: "fat" },
-      { text: "Carbs (g)", value: "carbs" },
-      { text: "Protein (g)", value: "protein" },
+      { text: "Last Name", value: "last_name" },
+      { text: "Email", value: "email" },
+      { text: "Phone", value: "phone" },
+      { text: "Address", value: "address" },
       { text: "Actions", value: "action", sortable: false }
     ],
     desserts: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
-    },
-    defaultItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      address: ""
     }
+    // defaultItem: {
+    //   name: "",
+    //   calories: 0,
+    //   fat: 0,
+    //   carbs: 0,
+    //   protein: 0
+    // }
   }),
 
   computed: {
@@ -108,40 +110,19 @@ export default {
 
   methods: {
     initialize() {
-      this.desserts = [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3
-        },
-        {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3
-        }
-      ];
+      return axios
+        .get("http://localhost:3000/users")
+        .then(response => {
+          console.log(response.data);
+          this.desserts = response.data;
+        })
+        .catch(e => {
+          console.log(e);
+        });
     },
 
     editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = item.id;
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
@@ -160,11 +141,26 @@ export default {
       }, 300);
     },
 
-    save() {
+    save(item) {
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+        axios
+          .put(`http://localhost:3000/users/${item.id}`, {
+            id: this.editedItem.id,
+            first_name: this.editedItem.first_name,
+            last_name: this.editedItem.last_name,
+            email: this.editedItem.email,
+            phone: this.editedItem.phone,
+            address: this.editedItem.address
+          })
+          .then(response => {
+            console.log(response);
+            this.initialize();
+          })
+          .catch(error => {
+            console.log(error);
+          });
       } else {
-        this.desserts.push(this.editedItem);
+        this.notificationTypes.push(this.editedItem);
       }
       this.close();
     }

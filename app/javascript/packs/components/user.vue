@@ -129,8 +129,19 @@ export default {
 
     deleteItem(item) {
       const index = this.desserts.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
-        this.desserts.splice(index, 1);
+      confirm("Are you sure you want to delete this item?"); //&&
+      axios
+        .delete(`http://localhost:3000/users/${item.id}`)
+        .then(response => {
+          console.log(response);
+          console.log(response.data.json);
+          alert(response.data.json);
+          this.initialize();
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      this.desserts.splice(index, 1);
     },
 
     close() {
@@ -160,7 +171,22 @@ export default {
             console.log(error);
           });
       } else {
-        this.notificationTypes.push(this.editedItem);
+        console.log(item);
+        //this.$store.dispatch("createNotificationType", item);
+        axios
+          .post(`http://localhost:3000/users/`, {
+            //name: this.editedItem.name
+            user: this.editedItem
+          })
+          .then(response => {
+            console.log(response);
+            console.log("Created!");
+            this.initialize();
+          })
+          .catch(error => {
+            console.log(error);
+          });
+        //this.notificationTypes.push(this.editedItem);
       }
       this.close();
     }

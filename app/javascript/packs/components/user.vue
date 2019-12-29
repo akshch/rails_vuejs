@@ -82,14 +82,14 @@ export default {
       email: "",
       phone: "",
       address: ""
+    },
+    defaultItem: {
+      name: "",
+      calories: "",
+      fat: "",
+      carbs: "",
+      protein: ""
     }
-    // defaultItem: {
-    //   name: "",
-    //   calories: 0,
-    //   fat: 0,
-    //   carbs: 0,
-    //   protein: 0
-    // }
   }),
 
   computed: {
@@ -129,7 +129,7 @@ export default {
 
     deleteItem(item) {
       const index = this.desserts.indexOf(item);
-      confirm("Are you sure you want to delete this item?"); //&&
+      confirm("Are you sure you want to delete this item?");
       axios
         .delete(`http://localhost:3000/users/${item.id}`)
         .then(response => {
@@ -172,10 +172,8 @@ export default {
           });
       } else {
         console.log(item);
-        //this.$store.dispatch("createNotificationType", item);
         axios
           .post(`http://localhost:3000/users/`, {
-            //name: this.editedItem.name
             user: this.editedItem
           })
           .then(response => {
@@ -186,7 +184,7 @@ export default {
           .catch(error => {
             console.log(error);
           });
-        //this.notificationTypes.push(this.editedItem);
+        //this.desserts.push(this.editedItem);
       }
       this.close();
     }

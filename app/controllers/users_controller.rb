@@ -25,7 +25,7 @@ class UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
     if @user.destroy
-      render json: { json: 'Notification type was successfully deleted.'}
+      render json: { json: 'User was successfully deleted.'}
     else
       render json: { json: user.error, status: :unprocessable_entity }
     end

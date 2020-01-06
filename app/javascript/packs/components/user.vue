@@ -184,9 +184,20 @@ export default {
           .catch(error => {
             console.log(error);
           });
-        //this.desserts.push(this.editedItem);
+        this.desserts.push(this.editedItem);
       }
       this.close();
+    },
+
+    getUser(item) {
+      axios
+        .get(`https:localhost:3000/${item.id}`)
+        .then(response => {
+          this.dessert = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };

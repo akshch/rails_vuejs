@@ -10,7 +10,8 @@ Things you may want to cover:
 
 git clone `https://github.com/akshch/rails_vuejs.git`
 
-Then run 
-`bundle install`
+Then run `bundle install`
+
+Then run `rails db:migrate`
 
 Run the servers ``rails server`` and ``bin/webpack-dev-server``

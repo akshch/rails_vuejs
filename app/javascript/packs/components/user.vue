@@ -191,7 +191,7 @@ export default {
 
     getUser(item) {
       axios
-        .get(`https:localhost:3000/${item.id}`)
+        .get(`http://localhost:3000/${item.id}`)
         .then(response => {
           this.dessert = response.data;
         })
